@@ -173,14 +173,31 @@ body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans
 .spin-d:nth-child(2){animation-delay:0.15s}.spin-d:nth-child(3){animation-delay:0.3s}
 @keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1)}}
 
+/* Category picker */
+.cat-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.cat-btn{border:2px solid var(--border);border-radius:16px;padding:22px 16px;cursor:pointer;text-align:center;transition:all 0.15s;background:var(--white)}
+.cat-btn:hover{border-color:var(--blue-mid);background:var(--blue-light)}
+.cat-btn.active{border-color:var(--primary);background:var(--blue-light);box-shadow:0 0 0 3px rgba(14,165,233,0.15)}
+.cat-icon{font-size:30px;margin-bottom:8px}
+.cat-label{font-size:15px;font-weight:700;color:var(--text)}
+.svc-list-wrap{animation:up 0.25s ease both}
+
 @media(max-width:900px){
   .shell{grid-template-columns:1fr}
-  .left{position:relative;height:auto;padding:32px 28px}
-  .left-headline{font-size:26px}
-  .right{padding:36px 24px 70px;max-width:100%}
+  .left{position:relative;height:auto;padding:20px 20px 16px}
+  .left-logo{margin-bottom:0;font-size:12px}
+  .left-headline,.left-sub{display:none}
+  .sum-block{margin-bottom:12px;min-height:0;padding:14px 16px}
+  .step-nav{flex-direction:row;gap:12px}
+  .snav{font-size:11px;gap:6px}
+  .snav-pip{width:18px;height:18px;font-size:9px}
+  .right{padding:28px 18px 70px;max-width:100%}
   .cal-wrap{grid-template-columns:1fr;gap:24px}
   .form-grid{grid-template-columns:1fr}
   .form-full{grid-column:auto}
+  .p-title{font-size:26px}
+  .cat-btn{padding:16px 12px}
+  .cat-icon{font-size:26px}
 }
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--blue-mid);border-radius:4px}
 </style>
@@ -294,40 +311,67 @@ body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans
 <script>
 const API = "https://skidoc-booking.onrender.com";
 
-// Services pulled from your actual pricing
-const SERVICES = [
-  { id:"perf-ski", name:"Performance Prep Ski Tune", desc:"Advanced start-of-season tune — precise edge structure, true base, fully prepped for peak performance.", price:70, duration:120, cat:"Ski" },
-  { id:"full-ski", name:"Full Ski Tune-Up", desc:"Complete tune to restore edge hold, glide, and overall performance. Ideal for mid-season refreshes.", price:55, duration:90, cat:"Ski" },
-  { id:"perf-board", name:"Performance Prep Snowboard Tune", desc:"Advanced start-of-season service — dialling in edges and base structure for smooth, predictable performance.", price:70, duration:120, cat:"Snowboard" },
-  { id:"full-board", name:"Full Snowboard Tune-Up", desc:"Comprehensive service to improve control, speed, and feel. Best for boards that feel slow or less responsive.", price:55, duration:90, cat:"Snowboard" },
-  { id:"hot-wax", name:"Hot Base Wax", desc:"Deep hot wax treatment to restore base moisture, improve glide, and protect against wear.", price:30, duration:45, cat:"Maintenance" },
-  { id:"edge-sharp", name:"Precision Edge Sharpening", desc:"Carefully sharpened edges for improved grip and confidence on firm and icy conditions.", price:30, duration:45, cat:"Maintenance" },
-  { id:"edge-maint", name:"Edge Maintenance Tune", desc:"Light diamond stone work to clean, smooth, and restore sharpness. Perfect for maintaining consistent edge feel.", price:25, duration:30, cat:"Maintenance" },
-  { id:"ptex", name:"P-Tex Base Repair", desc:"Repair of base damage and core shots to extend equipment life and prevent further deterioration.", price:20, duration:60, cat:"Repair" },
-  { id:"binding", name:"Binding Adjustment", desc:"Professional binding adjustment to ensure proper fit, function, and safe release based on your setup.", price:15, duration:20, cat:"Repair" },
-];
+const SERVICES = {
+  ski: [
+    { id:"ski-full",   name:"Full Ski Tune-Up",           desc:"Complete tune — base grind, edge sharpening, hot wax. Best for mid-season refreshes.", price:55 },
+    { id:"ski-perf",   name:"Performance Prep Tune",       desc:"Advanced start-of-season tune — precise edge structure, true base, fully prepped for peak performance.", price:70 },
+    { id:"ski-wax",    name:"Hot Base Wax",                desc:"Deep hot wax treatment to restore base moisture and improve glide.", price:30 },
+    { id:"ski-edge",   name:"Edge Tuning & Sharpening",    desc:"Precision side and base bevel work — crisp, confident edges every run.", price:30 },
+    { id:"ski-ptex",   name:"P-Tex Base Repair",           desc:"Repair of base damage and core shots to extend equipment life.", price:20 },
+    { id:"ski-bind",   name:"Binding Adjustment",          desc:"Professional adjustment for proper fit, function, and safe release.", price:15 },
+  ],
+  snowboard: [
+    { id:"sb-full",    name:"Full Snowboard Tune-Up",      desc:"Complete tune — base grind, edge sharpening, hot wax. Restore control, speed, and feel.", price:55 },
+    { id:"sb-perf",    name:"Performance Prep Tune",       desc:"Advanced start-of-season service — dialling in edges and base structure for smooth, predictable performance.", price:70 },
+    { id:"sb-wax",     name:"Hot Base Wax",                desc:"Deep hot wax treatment to restore base moisture and improve glide.", price:30 },
+    { id:"sb-edge",    name:"Edge Tuning & Sharpening",    desc:"Carefully sharpened edges for improved grip and confidence on firm and icy snow.", price:30 },
+    { id:"sb-ptex",    name:"P-Tex Base Repair",           desc:"Repair of base damage and core shots to extend the life of your board.", price:20 },
+    { id:"sb-bind",    name:"Binding Adjustment",          desc:"Professional adjustment for proper fit, function, and safe release based on your setup.", price:15 },
+  ],
+};
 
 let sel = { service:null, date:null, time:null };
+let selectedCat = null;
 let calMo = new Date(); calMo.setDate(1);
 
-function renderSvcs() {
-  var html = '';
-  for(var i=0; i<SERVICES.length; i++) {
-    var s = SERVICES[i];
-    var isSel = sel.service && sel.service.id === s.id;
-    html += '<div class="svc-card' + (isSel?' sel':'') + '" onclick="pickSvc(\''+s.id+'\')">'+
-      '<div><div class="svc-cat">'+s.cat+'</div>'+
-      '<div class="svc-name">'+s.name+'</div>'+
-      '<div class="svc-desc">'+s.desc+'</div></div>'+
-      '<div class="svc-right">'+
-      '<div class="svc-price">$'+s.price+'</div>'+
-      '</div></div>';
-  }
-  document.getElementById('svc-list').innerHTML = html;
+function pickCat(cat) {
+  selectedCat = cat;
+  sel.service = null;
+  renderSvcs();
 }
 
-function pickSvc(id) {
-  for(var i=0; i<SERVICES.length; i++) { if(SERVICES[i].id===id) sel.service=SERVICES[i]; }
+function renderSvcs() {
+  var catHtml =
+    '<div class="cat-picker">'+
+      '<div class="cat-btn'+(selectedCat==='ski'?' active':'')+'" onclick="pickCat(\'ski\')">'+
+        '<div class="cat-icon">🎿</div><div class="cat-label">Ski</div>'+
+      '</div>'+
+      '<div class="cat-btn'+(selectedCat==='snowboard'?' active':'')+'" onclick="pickCat(\'snowboard\')">'+
+        '<div class="cat-icon">🏂</div><div class="cat-label">Snowboard</div>'+
+      '</div>'+
+    '</div>';
+
+  var listHtml = '';
+  if (selectedCat) {
+    listHtml = '<div class="svc-list-wrap"><div class="svc-list">';
+    var list = SERVICES[selectedCat];
+    for (var i=0; i<list.length; i++) {
+      var s = list[i];
+      var isSel = sel.service && sel.service.id === s.id;
+      listHtml += '<div class="svc-card'+(isSel?' sel':'')+'" onclick="pickSvc(\''+s.id+'\',\''+selectedCat+'\')">'+
+        '<div><div class="svc-name">'+s.name+'</div><div class="svc-desc">'+s.desc+'</div></div>'+
+        '<div class="svc-right"><div class="svc-price">$'+s.price+'</div></div>'+
+        '</div>';
+    }
+    listHtml += '</div></div>';
+  }
+
+  document.getElementById('svc-list').innerHTML = catHtml + listHtml;
+}
+
+function pickSvc(id, cat) {
+  var list = SERVICES[cat];
+  for(var i=0; i<list.length; i++) { if(list[i].id===id) sel.service=list[i]; }
   sel.date=null; sel.time=null;
   renderSvcs(); updateSum();
   setTimeout(function(){ goStep(2); }, 240);
@@ -486,6 +530,7 @@ function showDone(b){
 
 function reset(){
   sel={service:null,date:null,time:null};
+  selectedCat=null;
   ['inp-name','inp-phone','inp-email','inp-notes'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('conf-txt').textContent='Confirm Booking';
   document.getElementById('btn-confirm').disabled=false;
