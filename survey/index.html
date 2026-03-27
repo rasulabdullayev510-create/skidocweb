@@ -14,21 +14,19 @@ body{background:#f5f7fb;font-family:'Plus Jakarta Sans',sans-serif;min-height:10
 .title{font-size:26px;font-weight:700;color:#0f172a;letter-spacing:-0.02em;margin-bottom:8px}
 .sub{font-size:14px;color:#64748b;line-height:1.7;margin-bottom:32px}
 .stars{display:flex;justify-content:center;gap:8px;margin-bottom:28px}
-.star{font-size:40px;cursor:pointer;transition:transform 0.1s;filter:grayscale(1);opacity:0.3;line-height:1}
+.star{font-size:44px;cursor:pointer;transition:transform 0.1s;filter:grayscale(1);opacity:0.25;line-height:1;user-select:none}
 .star:hover,.star.active{filter:grayscale(0);opacity:1;transform:scale(1.15)}
-.feedback-wrap{margin-bottom:24px;text-align:left;animation:up 0.2s ease both}
+.feedback-wrap{margin-bottom:20px;text-align:left;animation:up 0.2s ease both}
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .feedback-wrap label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#64748b;display:block;margin-bottom:8px}
-textarea{width:100%;border:1.5px solid rgba(148,163,184,0.4);border-radius:12px;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;resize:none;min-height:90px;outline:none;transition:border-color 0.13s}
+textarea{width:100%;border:1.5px solid rgba(148,163,184,0.4);border-radius:12px;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;resize:none;min-height:100px;outline:none;transition:border-color 0.13s}
 textarea:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,0.1)}
-.btn{width:100%;background:#0ea5e9;color:#fff;border:none;border-radius:999px;padding:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.05em}
-.btn:hover:not(:disabled){background:#0284c7;transform:translateY(-1px);box-shadow:0 6px 20px rgba(14,165,233,0.3)}
+.btn{width:100%;background:#0f172a;color:#fff;border:none;border-radius:999px;padding:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.05em}
+.btn:hover:not(:disabled){background:#0ea5e9;transform:translateY(-1px);box-shadow:0 6px 20px rgba(14,165,233,0.25)}
 .btn:disabled{opacity:0.4;cursor:default;transform:none}
 .done-icon{font-size:52px;margin-bottom:16px}
 .done-title{font-size:24px;font-weight:700;color:#0f172a;margin-bottom:8px}
 .done-sub{font-size:14px;color:#64748b;line-height:1.7}
-.google-btn{display:inline-flex;align-items:center;gap:8px;margin-top:24px;background:#0f172a;color:#fff;border:none;border-radius:999px;padding:12px 24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s}
-.google-btn:hover{background:#0ea5e9}
 </style>
 </head>
 <body>
@@ -36,7 +34,7 @@ textarea:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,0.1)}
   <div class="logo">⛷️ Ski Doc Calgary</div>
   <div class="icon">🏔</div>
   <div class="title">How was your experience?</div>
-  <p class="sub" id="sub-text">Your feedback helps us keep our service top-notch. Takes 20 seconds.</p>
+  <p class="sub">Tap a star to rate your service.</p>
   <div class="stars" id="stars">
     <span class="star" data-v="1">★</span>
     <span class="star" data-v="2">★</span>
@@ -47,8 +45,9 @@ textarea:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,0.1)}
   <div class="feedback-wrap" id="feedback-wrap" style="display:none">
     <label>What could we do better?</label>
     <textarea id="feedback-txt" placeholder="Tell us what happened..."></textarea>
+    <br/><br/>
+    <button class="btn" id="submit-btn" onclick="submitLow()">Send Feedback</button>
   </div>
-  <button class="btn" id="submit-btn" onclick="submit()" disabled>Submit</button>
 </div>
 
 <script>
@@ -58,56 +57,56 @@ const token = new URLSearchParams(window.location.search).get("token");
 let rating = 0;
 
 document.querySelectorAll(".star").forEach(function(star) {
-  star.addEventListener("click", function() {
-    rating = parseInt(this.getAttribute("data-v"));
-    document.querySelectorAll(".star").forEach(function(s) {
-      s.classList.toggle("active", parseInt(s.getAttribute("data-v")) <= rating);
-    });
-    document.getElementById("feedback-wrap").style.display = rating <= 3 ? "block" : "none";
-    document.getElementById("submit-btn").disabled = false;
-  });
   star.addEventListener("mouseenter", function() {
     var v = parseInt(this.getAttribute("data-v"));
     document.querySelectorAll(".star").forEach(function(s) {
-      s.style.filter = parseInt(s.getAttribute("data-v")) <= v ? "grayscale(0)" : "grayscale(1)";
-      s.style.opacity = parseInt(s.getAttribute("data-v")) <= v ? "1" : "0.3";
+      var sv = parseInt(s.getAttribute("data-v"));
+      s.style.filter = sv <= v ? "grayscale(0)" : "grayscale(1)";
+      s.style.opacity = sv <= v ? "1" : "0.25";
     });
   });
   star.addEventListener("mouseleave", function() {
     document.querySelectorAll(".star").forEach(function(s) {
       var active = s.classList.contains("active");
       s.style.filter = active ? "grayscale(0)" : "grayscale(1)";
-      s.style.opacity = active ? "1" : "0.3";
+      s.style.opacity = active ? "1" : "0.25";
     });
+  });
+  star.addEventListener("click", function() {
+    rating = parseInt(this.getAttribute("data-v"));
+    document.querySelectorAll(".star").forEach(function(s) {
+      s.classList.toggle("active", parseInt(s.getAttribute("data-v")) <= rating);
+    });
+    if (rating >= 4) {
+      // Immediately send to Google
+      fetch(API + "/api/submit-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: token, rating: rating, feedback: null })
+      });
+      window.location.href = GOOGLE;
+    } else {
+      document.getElementById("feedback-wrap").style.display = "block";
+    }
   });
 });
 
-async function submit() {
-  if (!rating) return;
+async function submitLow() {
   var btn = document.getElementById("submit-btn");
+  var feedback = document.getElementById("feedback-txt").value.trim();
   btn.disabled = true;
-  btn.textContent = "Submitting...";
-  var feedback = document.getElementById("feedback-txt") ? document.getElementById("feedback-txt").value.trim() : "";
+  btn.textContent = "Sending...";
   try {
     await fetch(API + "/api/submit-feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: token, rating: rating, feedback: feedback })
     });
-    if (rating >= 4) {
-      document.getElementById("card").innerHTML =
-        '<div class="logo">⛷️ Ski Doc Calgary</div>' +
-        '<div class="done-icon">🙌</div>' +
-        '<div class="done-title">Thank you!</div>' +
-        '<p class="done-sub">We\'re stoked you had a great experience. Mind leaving us a quick Google review? It helps a lot!</p>' +
-        '<a class="google-btn" href="' + GOOGLE + '" target="_blank">⭐ Leave a Google Review</a>';
-    } else {
-      document.getElementById("card").innerHTML =
-        '<div class="logo">⛷️ Ski Doc Calgary</div>' +
-        '<div class="done-icon">🙏</div>' +
-        '<div class="done-title">Thanks for the feedback</div>' +
-        '<p class="done-sub">We appreciate you letting us know. We\'ll use this to do better next time.</p>';
-    }
+    document.getElementById("card").innerHTML =
+      '<div class="logo">⛷️ Ski Doc Calgary</div>' +
+      '<div class="done-icon">🙏</div>' +
+      '<div class="done-title">Thank you</div>' +
+      '<p class="done-sub">We appreciate you letting us know. We\'ll use this to do better next time.</p>';
   } catch(e) {
     btn.disabled = false;
     btn.textContent = "Try Again";
