@@ -390,10 +390,10 @@ function renderCal() {
   for(var d=1;d<=days;d++){
     var dt=new Date(y,m,d);
     var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    var past=dt<today,sun=dt.getDay()===0,picked=ds===sel.date,tdy=dt.getTime()===today.getTime();
+    var past=dt<today,picked=ds===sel.date,tdy=dt.getTime()===today.getTime();
     var cls='cal-d';
-    if(past||sun) cls+=' dis'; else if(picked) cls+=' picked'; else if(tdy) cls+=' today';
-    h+='<div class="'+cls+'"'+((!past&&!sun)?' onclick="pickDate(\''+ds+'\')"':'')+'>'+d+'</div>';
+    if(past) cls+=' dis'; else if(picked) cls+=' picked'; else if(tdy) cls+=' today';
+    h+='<div class="'+cls+'"'+(!past?' onclick="pickDate(\''+ds+'\')"':'')+'>'+d+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=h;
 }
