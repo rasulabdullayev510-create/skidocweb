@@ -24,27 +24,60 @@ const reviewsConfig = {
   placeId: "",
   apiKey: "",
   reviewsEndpoint: "",
-  maxReviews: 3,
+  maxReviews: 8,
   manualReviews: {
     summary: {
       rating: 5.0,
-      total: 14,
+      total: 20,
     },
     reviews: [
       {
         author_name: "Ammar Abdurashidov",
         rating: 5,
+        relative_time_description: "7 months ago",
         text: "Rasul does an awesome job. He’s fast, honest, and my skis felt brand new after his tune. Highly recommend.",
+      },
+      {
+        author_name: "Richard Hunter",
+        rating: 5,
+        relative_time_description: "6 months ago",
+        text: "I set up a drop-off time and pick-up time at my convenience — 2 day turn-around. No parking issues, no waiting in line. Skis look great!",
       },
       {
         author_name: "William Chen",
         rating: 5,
+        relative_time_description: "6 months ago",
         text: "Very professional and excellent service. Brought in a pair of skis last minute as other businesses had very long turnaround times and the service was done quickly and with precision.",
       },
       {
-        author_name: "Likith Punuganti.",
+        author_name: "Elnur",
         rating: 5,
+        relative_time_description: "6 months ago",
+        text: "Got the full ski tuneup and my skis look brand new, will definitely be coming back!",
+      },
+      {
+        author_name: "Likith Punuganti",
+        rating: 5,
+        relative_time_description: "6 months ago",
         text: "Dropped off my snowboard for waxing and sharpening, looked amazing and felt great on the slopes!",
+      },
+      {
+        author_name: "Emre Can Mert",
+        rating: 5,
+        relative_time_description: "3 months ago",
+        text: "Amazing service and nice guy, my snowboard felt brand new! I highly recommend.",
+      },
+      {
+        author_name: "Namaz",
+        rating: 5,
+        relative_time_description: "5 months ago",
+        text: "Skis looked and felt amazing after getting the full ski tuneup. Definitely recommend if you need edges or waxing done!",
+      },
+      {
+        author_name: "Brianna de Haas",
+        rating: 5,
+        relative_time_description: "7 months ago",
+        text: "So glad I found this place. My skis look great! Big shoutout to Rasul.",
       },
     ],
   },
