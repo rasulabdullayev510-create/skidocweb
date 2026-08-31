@@ -8,6 +8,34 @@ if (toggleButton && navLinks) {
   });
 }
 
+const toggleBtns = document.querySelectorAll(".toggle-btn");
+const servicePriceEls = document.querySelectorAll(".service-price[data-price]");
+
+function applyServiceMode(mode) {
+  servicePriceEls.forEach((el) => {
+    const base = Number(el.dataset.price);
+    const hasFrom = el.dataset.from === "true";
+    if (mode === "mobile") {
+      el.innerHTML = `<span class="service-from">from</span> $${base + 10}`;
+    } else {
+      el.innerHTML = hasFrom ? `<span class="service-from">from</span> $${base}` : `$${base}`;
+    }
+  });
+  toggleBtns.forEach((btn) => {
+    const active = btn.dataset.mode === mode;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-selected", String(active));
+  });
+}
+
+if (toggleBtns.length && servicePriceEls.length) {
+  toggleBtns.forEach((btn) => {
+    btn.addEventListener("click", () => applyServiceMode(btn.dataset.mode));
+  });
+  const params = new URLSearchParams(window.location.search);
+  applyServiceMode(params.get("view") === "mobile" ? "mobile" : "inshop");
+}
+
 document.querySelectorAll(".service-row-toggle").forEach((toggle) => {
   toggle.addEventListener("click", () => {
     const row = toggle.closest(".service-row");
