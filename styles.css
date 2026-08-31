@@ -214,6 +214,118 @@ img {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.services-note {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.services-table {
+  display: grid;
+  gap: 12px;
+}
+
+.service-row {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.service-row-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: none;
+  border: none;
+  padding: 18px 22px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+}
+
+.service-row-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service-chevron {
+  display: inline-flex;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary);
+  transition: transform 0.25s ease;
+  line-height: 1;
+}
+
+.service-row.open .service-chevron {
+  transform: rotate(90deg);
+}
+
+.service-name {
+  font-weight: 600;
+}
+
+.service-badge {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.service-price {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.service-from {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+}
+
+.service-desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.service-desc-inner {
+  overflow: hidden;
+}
+
+.service-row.open .service-desc {
+  grid-template-rows: 1fr;
+}
+
+.service-desc p,
+.service-desc ul {
+  padding: 0 22px 20px 22px;
+  color: var(--text-muted);
+}
+
+.service-desc ul {
+  padding-left: 40px;
+}
+
+.service-desc li {
+  margin-bottom: 4px;
+}
+
 .card {
   background: var(--card);
   padding: 24px;

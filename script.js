@@ -8,6 +8,14 @@ if (toggleButton && navLinks) {
   });
 }
 
+document.querySelectorAll(".service-row-toggle").forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    const row = toggle.closest(".service-row");
+    const isOpen = row.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(isOpen));
+  });
+});
+
 const reviewsGrid = document.querySelector("#reviews-grid");
 const reviewsRating = document.querySelector("#reviews-rating");
 const reviewsCount = document.querySelector("#reviews-count");
