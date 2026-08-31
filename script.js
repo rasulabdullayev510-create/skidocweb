@@ -1,3 +1,21 @@
+// Anonymous page-view ping for the admin dashboard's traffic stats.
+// No cookies, no PII — just a page identifier and a timestamp.
+(function () {
+  var path = location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "");
+  var page = path === "" ? "home"
+    : path.indexOf("services") !== -1 ? "services"
+    : path.indexOf("mobile") !== -1 ? "mobile"
+    : "other";
+  try {
+    fetch("https://skidoc-booking-eblt.onrender.com/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ page: page }),
+      keepalive: true,
+    }).catch(function () {});
+  } catch (e) {}
+})();
+
 const toggleButton = document.querySelector(".menu-toggle");
 const navLinks = document.querySelector(".nav-links");
 
