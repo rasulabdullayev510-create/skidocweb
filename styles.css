@@ -402,6 +402,17 @@ img {
   margin-bottom: 16px;
 }
 
+.kids-discount-banner {
+  background: var(--bg-muted);
+  border-left: 4px solid var(--accent);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 14px 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
 .services-table {
   display: grid;
   gap: 12px;
@@ -495,6 +506,14 @@ img {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-right: 4px;
+}
+
+.service-was {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.85em;
+  margin-right: 6px;
 }
 
 .service-desc {
