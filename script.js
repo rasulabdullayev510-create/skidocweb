@@ -16,6 +16,77 @@
   } catch (e) {}
 })();
 
+// Live site content from the admin CMS — hero text, contact info, socials,
+// and the mobile on/off switch. Falls back to whatever's already in the
+// HTML if the fetch fails, so the site is never blocked on this.
+(function () {
+  var path = location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "");
+  var isHome = path === "";
+  var isMobilePage = path.indexOf("mobile") !== -1;
+
+  function applyMobileDisabled() {
+    document.querySelectorAll('a[href="mobile.html"]').forEach(function (el) { el.style.display = "none"; });
+    var banner = document.querySelector(".mobile-banner-wrap");
+    if (banner) banner.style.display = "none";
+    var toggleBtn = document.querySelector('.toggle-btn[data-mode="mobile"]');
+    if (toggleBtn) toggleBtn.style.display = "none";
+    if (isMobilePage) {
+      var hero = document.querySelector(".hero");
+      if (hero) {
+        hero.innerHTML = '<div class="hero-content">' +
+          '<p class="eyebrow">Mobile Service</p>' +
+          '<h1>Currently Unavailable</h1>' +
+          '<p class="hero-subtitle">Mobile service isn\'t available right now — check back soon, or visit us in-shop.</p>' +
+          '<div class="hero-actions"><a class="btn primary" href="services.html">View In-Shop Services</a></div>' +
+          '</div>';
+      }
+    }
+  }
+
+  function applyCmsContent(cfg) {
+    if (!cfg) return;
+
+    var phoneEl = document.querySelector(".footer-contact div:nth-child(1) span");
+    if (phoneEl && cfg.phone) phoneEl.textContent = cfg.phone;
+    var emailLink = document.querySelector(".footer-contact div:nth-child(2) span a");
+    if (emailLink && cfg.email) { emailLink.textContent = cfg.email; emailLink.href = "mailto:" + cfg.email; }
+
+    if (cfg.socials) {
+      var ig = document.querySelector('.footer-socials a[aria-label="Instagram"]');
+      var fb = document.querySelector('.footer-socials a[aria-label="Facebook"]');
+      var gg = document.querySelector('.footer-socials a[aria-label="Google"]');
+      if (ig && cfg.socials.instagram) ig.href = cfg.socials.instagram;
+      if (fb && cfg.socials.facebook) fb.href = cfg.socials.facebook;
+      if (gg && cfg.socials.google) gg.href = cfg.socials.google;
+    }
+
+    if (isHome && cfg.hero) {
+      var h1 = document.querySelector(".hero-content h1");
+      var sub = document.querySelector(".hero-content .hero-subtitle");
+      if (h1 && cfg.hero.headline) h1.textContent = cfg.hero.headline;
+      if (sub && cfg.hero.subtitle) sub.textContent = cfg.hero.subtitle;
+    }
+    if (isMobilePage && cfg.mobilePage && cfg.mobileEnabled !== false) {
+      var mh1 = document.querySelector(".hero-content h1");
+      var msub = document.querySelector(".hero-content .hero-subtitle");
+      if (mh1 && cfg.mobilePage.headline) mh1.textContent = cfg.mobilePage.headline;
+      if (msub && cfg.mobilePage.description) msub.textContent = cfg.mobilePage.description;
+    }
+
+    var kidsBanner = document.querySelector(".kids-discount-banner");
+    if (kidsBanner && cfg.kidsDiscountText) kidsBanner.textContent = cfg.kidsDiscountText;
+
+    if (cfg.mobileEnabled === false) applyMobileDisabled();
+  }
+
+  try {
+    fetch("https://skidoc-booking-eblt.onrender.com/api/site-config")
+      .then(function (r) { return r.json(); })
+      .then(applyCmsContent)
+      .catch(function () {});
+  } catch (e) {}
+})();
+
 const toggleButton = document.querySelector(".menu-toggle");
 const navLinks = document.querySelector(".nav-links");
 
