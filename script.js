@@ -30,16 +30,10 @@
     if (banner) banner.style.display = "none";
     var toggleBtn = document.querySelector('.toggle-btn[data-mode="mobile"]');
     if (toggleBtn) toggleBtn.style.display = "none";
+    var processSection = document.querySelector(".mobile-process-section");
+    if (processSection) processSection.style.display = "none";
     if (isMobilePage) {
-      var hero = document.querySelector(".hero");
-      if (hero) {
-        hero.innerHTML = '<div class="hero-content">' +
-          '<p class="eyebrow">Mobile Service</p>' +
-          '<h1>Currently Unavailable</h1>' +
-          '<p class="hero-subtitle">Mobile service isn\'t available right now — check back soon, or visit us in-shop.</p>' +
-          '<div class="hero-actions"><a class="btn primary" href="services.html">View In-Shop Services</a></div>' +
-          '</div>';
-      }
+      window.location.replace("index.html");
     }
   }
 
