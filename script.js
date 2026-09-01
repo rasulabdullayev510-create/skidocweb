@@ -24,8 +24,13 @@
   var isHome = path === "";
   var isMobilePage = path.indexOf("mobile") !== -1;
 
+  function isMobileLink(el) {
+    var href = el.getAttribute("href") || "";
+    return /(^|\/)mobile(\.html)?\/?(\?|#|$)/.test(href);
+  }
+
   function applyMobileDisabled() {
-    document.querySelectorAll('a[href="mobile.html"]').forEach(function (el) { el.style.display = "none"; });
+    document.querySelectorAll("a[href]").forEach(function (el) { if (isMobileLink(el)) el.style.display = "none"; });
     var banner = document.querySelector(".mobile-banner-wrap");
     if (banner) banner.style.display = "none";
     var toggleBtn = document.querySelector('.toggle-btn[data-mode="mobile"]');
