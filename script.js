@@ -1,6 +1,22 @@
 // Anonymous page-view ping for the admin dashboard's traffic stats.
 // No cookies, no PII — just a page identifier and a timestamp.
+//
+// Visiting the site with ?owner=1 once (on a given browser/device) sets a
+// localStorage flag that skips tracking on every future visit from that
+// browser — so the site owner's own checks-ins don't skew the numbers.
+// This can't be tied to an email/account since the site has no login; it's
+// a per-browser opt-out, so it needs to be set on each device separately.
 (function () {
+  try {
+    var params = new URLSearchParams(location.search);
+    if (params.get("owner") === "1") localStorage.setItem("skidoc_owner", "1");
+    else if (params.get("owner") === "0") localStorage.removeItem("skidoc_owner");
+  } catch (e) {}
+
+  var isOwner = false;
+  try { isOwner = localStorage.getItem("skidoc_owner") === "1"; } catch (e) {}
+  if (isOwner) return;
+
   var path = location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "");
   var page = path === "" ? "home"
     : path.indexOf("services") !== -1 ? "services"
