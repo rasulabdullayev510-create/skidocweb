@@ -178,6 +178,10 @@ img {
   padding: 0 6vw 80px;
 }
 
+.pickup-banner-wrap {
+  padding: 0 12vw 80px;
+}
+
 .hero-mobile-callout {
   display: flex;
   align-items: center;
