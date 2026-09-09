@@ -92,6 +92,13 @@
     if (kidsBanner && cfg.kidsDiscountText) kidsBanner.textContent = cfg.kidsDiscountText;
 
     if (cfg.mobileEnabled === false) applyMobileDisabled();
+
+    // Pickup & Drop-off badge — only when on, and only when mobile isn't
+    // also on (the mobile badge takes priority if both happen to be active).
+    var pickupBanner = document.querySelector(".pickup-banner-wrap");
+    if (pickupBanner) {
+      pickupBanner.style.display = (cfg.pickupDropoffEnabled === true && cfg.mobileEnabled === false) ? "" : "none";
+    }
   }
 
   try {
