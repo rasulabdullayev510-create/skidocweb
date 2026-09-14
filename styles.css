@@ -50,7 +50,9 @@ img {
 }
 
 .site-header {
-  background: radial-gradient(circle at top, #dbeafe 0%, var(--bg) 55%);
+  background:
+    linear-gradient(180deg, rgba(245, 247, 251, 0.55) 0%, rgba(245, 247, 251, 0.82) 100%),
+    url("assets/gallery/hero-bg-banff.jpg") center 30% / cover no-repeat;
   padding: 32px 6vw 80px;
 }
 
