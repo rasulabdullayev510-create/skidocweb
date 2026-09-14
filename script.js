@@ -38,11 +38,16 @@
 (function () {
   var path = location.pathname.replace(/\/index\.html$/, "").replace(/\/$/, "");
   var isHome = path === "";
-  var isMobilePage = path.indexOf("mobile") !== -1;
+  var isMobilePage = path.indexOf("mobile") !== -1 && path.indexOf("pickup") === -1;
+  var isPickupPage = path.indexOf("pickup-dropoff") !== -1;
 
   function isMobileLink(el) {
     var href = el.getAttribute("href") || "";
     return /(^|\/)mobile(\.html)?\/?(\?|#|$)/.test(href);
+  }
+  function isPickupLink(el) {
+    var href = el.getAttribute("href") || "";
+    return /(^|\/)pickup-dropoff(\.html)?\/?(\?|#|$)/.test(href);
   }
 
   function applyMobileDisabled() {
@@ -54,6 +59,15 @@
     var processSection = document.querySelector(".mobile-process-section");
     if (processSection) processSection.style.display = "none";
     if (isMobilePage) {
+      window.location.replace("index.html");
+    }
+  }
+
+  // Pickup & Drop-off defaults OFF (opt-in), so the nav link/page stay
+  // hidden unless the CMS explicitly says it's enabled.
+  function applyPickupDropoffDisabled() {
+    document.querySelectorAll("a[href]").forEach(function (el) { if (isPickupLink(el)) el.style.display = "none"; });
+    if (isPickupPage) {
       window.location.replace("index.html");
     }
   }
@@ -92,6 +106,7 @@
     if (kidsBanner && cfg.kidsDiscountText) kidsBanner.textContent = cfg.kidsDiscountText;
 
     if (cfg.mobileEnabled === false) applyMobileDisabled();
+    if (cfg.pickupDropoffEnabled !== true) applyPickupDropoffDisabled();
 
     // Pickup & Drop-off badge — only when on, and only when mobile isn't
     // also on (the mobile badge takes priority if both happen to be active).
