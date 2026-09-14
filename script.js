@@ -58,6 +58,8 @@
     if (toggleBtn) toggleBtn.style.display = "none";
     var processSection = document.querySelector(".mobile-process-section");
     if (processSection) processSection.style.display = "none";
+    var mobileTurnaround = document.getElementById("mobile-turnaround-box");
+    if (mobileTurnaround) mobileTurnaround.style.display = "none";
     if (isMobilePage) {
       window.location.replace("index.html");
     }
