@@ -412,6 +412,18 @@ img {
   margin-bottom: 16px;
 }
 
+.preseason-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 8px 18px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
 .kids-discount-banner {
   background: var(--bg-muted);
   border-left: 4px solid var(--accent);

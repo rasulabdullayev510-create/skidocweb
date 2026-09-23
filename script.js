@@ -145,7 +145,8 @@ function applyServiceMode(mode) {
     const hasFrom = el.dataset.from === "true";
     const was = el.dataset.was ? Number(el.dataset.was) : null;
     if (mode === "mobile") {
-      el.innerHTML = `<span class="service-from">from</span> $${base + 10}`;
+      const mobilePrice = el.dataset.mobilePrice ? Number(el.dataset.mobilePrice) : base + 10;
+      el.innerHTML = `<span class="service-from">from</span> $${mobilePrice}`;
     } else if (was) {
       el.innerHTML = `<span class="service-was">$${was}</span> $${base}`;
     } else {
